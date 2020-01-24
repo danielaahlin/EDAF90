@@ -59,28 +59,32 @@ class Salad {
     }
 
     removeSelection(selection){
-        if (this.foundation.indexOf(selection) !== -1){
-            if (this.foundation.filter(x => x['ingredient'] === selection).filter(x => x['amount'] === 1)){
-                
-            } else {
-                this.foundation.filter(x => x['ingredient'] === selection).map(x => x['amount'] -= 1)
-            }
-        } else if (this.protein.indexOf(selection) !== -1){
-            this.protein.filter(x => x['ingredient'] === selection).map(x => x['amount'] -= 1)
-        } else if (this.extra.indexOf(selection) !== -1){
-            this.extra.filter(x => x['ingredient'] === selection).map(x => x['amount'] -= 1)
-        } else if (this.dressing.indexOf(selection) !== -1){
-            this.dressing.filter(x => x['ingredient'] === selection).map(x => x['amount'] -= 1)
+        if (this.foundation.filter(x => x['ingredient'] === selection).length !== 0){
+            this.foundation.filter(x => x['ingredient'] === selection).map(x => x['amount'] -= 1);
+            this.foundation = this.foundation.filter(x => x['amount'] > 0);
+        } else if (this.protein.filter(x => x['ingredient'] === selection).length !== 0){
+            this.protein.filter(x => x['ingredient'] === selection).map(x => x['amount'] -= 1);
+            this.protein = this.protein.filter(x => x['amount'] > 0);
+        } else if (this.extra.filter(x => x['ingredient'] === selection).length !== 0){
+            this.extra.filter(x => x['ingredient'] === selection).map(x => x['amount'] -= 1);
+            this.extra = this.extra.filter(x => x['amount'] > 0);
+        } else if (this.dressing.filter(x => x['ingredient'] === selection).length !== 0){
+            this.dressing.filter(x => x['ingredient'] === selection).map(x => x['amount'] -= 1);
+            this.dressing = this.dressing.filter(x => x['amount'] > 0);
         } else {
             console.log(selection + ' is not in this salad and can not be removed.')
         }
     }
 
     price(){
-        let foundationPrice = this.foundation.map((x => imported.inventory[x]['price'])).reduce((x, xs) => x + xs);
-        let proteinPrice = this.protein.map((x => imported.inventory[x]['price'])).reduce((x, xs) => x + xs);
-        let extrasPrice = this.extra.map((x => imported.inventory[x]['price'])).reduce((x, xs) => x + xs);
-        let dressingPrice = this.dressing.map((x => imported.inventory[x]['price'])).reduce((x, xs) => x + xs);
+        let foundationPrice = this.foundation.map((x => imported.inventory[x['ingredient']]['price'])).reduce((x, xs) => x + xs);
+        let proteinPrice = this.protein.map((x => imported.inventory[x['ingredient']]['price'])).reduce((x, xs) => x + xs);
+        let extrasPrice = this.extra.map((x => imported.inventory[x['ingredient']]['price'])).reduce((x, xs) => x + xs);
+        let dressingPrice = this.dressing.map((x => imported.inventory[x['ingredient']]['price'])).reduce((x, xs) => x + xs);
+
+        let fp = this.foundation.reduce((x, xs) => x['amount'] + xs);
+        console.log(fp);
+
         return foundationPrice + proteinPrice + extrasPrice + dressingPrice;
     }
 
@@ -129,7 +133,11 @@ myCesarSalad.addSelection('Parmesan'); // 5
 myCesarSalad.addSelection('Ceasardressing'); // 5
 myCesarSalad.addSelection('Bacon');
 console.log(myCesarSalad);
-// console.log(myCesarSalad.price());
+myCesarSalad.removeSelection('Kycklingfilé');
+myCesarSalad.removeSelection('Tomat');
+console.log('---');
+console.log(myCesarSalad);
+console.log(myCesarSalad.price());
 
 // let mySalad = new ExtraGreenSalad();
 // mySalad.addSelection("Salad + Quinoa"); // 10
