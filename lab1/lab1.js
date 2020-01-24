@@ -24,33 +24,33 @@ class Salad {
         this.dressing = [];
     }
 
-    addSelection(selection){
+    addSelection(selection, toAdd = 1){
         if(foundations.includes(selection)){
             if (this.exists(this.foundation, selection)){
-                this.foundation.filter(x => x['ingredient'] === selection).map(x => x['amount'] += 1)
+                this.foundation.filter(x => x['ingredient'] === selection).map(x => x['amount'] += toAdd);
             } else {
-                this.foundation.push({ingredient: selection, amount: 1});
+                this.foundation.push({ingredient: selection, amount: toAdd});
             }
             return;
         } else if (proteins.includes(selection)) {
             if (this.exists(this.protein, selection)){
-                this.protein.filter(x => x['ingredient'] === selection).map(x => x['amount'] += 1)
+                this.protein.filter(x => x['ingredient'] === selection).map(x => x['amount'] += toAdd);
             } else {
-                this.protein.push({ingredient: selection, amount: 1});
+                this.protein.push({ingredient: selection, amount: toAdd});
             }
             return;
         } else if (extras.includes(selection)) {
             if (this.exists(this.extra, selection)){
-                this.extra.filter(x => x['ingredient'] === selection).map(x => x['amount'] += 1)
+                this.extra.filter(x => x['ingredient'] === selection).map(x => x['amount'] += toAdd);
             } else {
-                this.extra.push({ingredient: selection, amount: 1});
+                this.extra.push({ingredient: selection, amount: toAdd});
             }
             return;
         } else if (dressings.includes(selection)) {
             if (this.exists(this.dressing, selection)){
-                this.dressing.filter(x => x['ingredient'] === selection).map(x => x['amount'] += 1)
+                this.dressing.filter(x => x['ingredient'] === selection).map(x => x['amount'] += toAdd);
             } else {
-                this.dressing.push({ingredient: selection, amount: 1});
+                this.dressing.push({ingredient: selection, amount: toAdd});
             }
             return;
         } else {
@@ -72,17 +72,17 @@ class Salad {
             this.dressing.filter(x => x['ingredient'] === selection).map(x => x['amount'] -= 1);
             this.dressing = this.dressing.filter(x => x['amount'] > 0);
         } else {
-            console.log(selection + ' is not in this salad and can not be removed.')
+            console.log(selection + ' is not in this salad and can not be removed.');
         }
     }
 
     price(){
-        let foundationPrice = this.foundation.map((x => imported.inventory[x['ingredient']]['price'])).reduce((x, xs) => x + xs);
-        let proteinPrice = this.protein.map((x => imported.inventory[x['ingredient']]['price'])).reduce((x, xs) => x + xs);
-        let extrasPrice = this.extra.map((x => imported.inventory[x['ingredient']]['price'])).reduce((x, xs) => x + xs);
-        let dressingPrice = this.dressing.map((x => imported.inventory[x['ingredient']]['price'])).reduce((x, xs) => x + xs);
+        let foundationPrice = (this.foundation.length !== 0) ? this.foundation.map((x => imported.inventory[x['ingredient']]['price'])).reduce((x, xs) => x + xs) : 0;
+        let proteinPrice = (this.protein.length !== 0) ? this.protein.map((x => imported.inventory[x['ingredient']]['price'])).reduce((x, xs) => x + xs) : 0;
+        let extrasPrice = (this.extra.length !== 0) ? this.extra.map((x => imported.inventory[x['ingredient']]['price'])).reduce((x, xs) => x + xs) : 0;
+        let dressingPrice = (this.dressing.length !== 0) ? this.dressing.map((x => imported.inventory[x['ingredient']]['price'])).reduce((x, xs) => x + xs) : 0;
 
-        let fp = this.foundation.reduce((x, xs) => x['amount'] + xs);
+        let fp = this.extra.reduce((x,xs) => x['amount'] + xs['amount']);
         console.log(fp);
 
         return foundationPrice + proteinPrice + extrasPrice + dressingPrice;
@@ -125,7 +125,7 @@ class GourmetSalad extends Salad {
 
 let myCesarSalad = new Salad();
 console.log(myCesarSalad);
-myCesarSalad.addSelection("Salad + Quinoa"); // 10
+myCesarSalad.addSelection("Salad + Quinoa", 3); // 10
 myCesarSalad.addSelection('Kycklingfilé'); // 10
 myCesarSalad.addSelection('Tomat'); // 5
 myCesarSalad.addSelection('Parmesan'); // 5
@@ -134,7 +134,6 @@ myCesarSalad.addSelection('Ceasardressing'); // 5
 myCesarSalad.addSelection('Bacon');
 console.log(myCesarSalad);
 myCesarSalad.removeSelection('Kycklingfilé');
-myCesarSalad.removeSelection('Tomat');
 console.log('---');
 console.log(myCesarSalad);
 console.log(myCesarSalad.price());
