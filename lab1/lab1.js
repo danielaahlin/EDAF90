@@ -77,13 +77,10 @@ class Salad {
     }
 
     price(){
-        let foundationPrice = (this.foundation.length !== 0) ? this.foundation.map((x => imported.inventory[x['ingredient']]['price'])).reduce((x, xs) => x + xs) : 0;
-        let proteinPrice = (this.protein.length !== 0) ? this.protein.map((x => imported.inventory[x['ingredient']]['price'])).reduce((x, xs) => x + xs) : 0;
-        let extrasPrice = (this.extra.length !== 0) ? this.extra.map((x => imported.inventory[x['ingredient']]['price'])).reduce((x, xs) => x + xs) : 0;
-        let dressingPrice = (this.dressing.length !== 0) ? this.dressing.map((x => imported.inventory[x['ingredient']]['price'])).reduce((x, xs) => x + xs) : 0;
-
-        let fp = this.extra.reduce((x,xs) => x['amount'] + xs['amount']);
-        console.log(fp);
+        let foundationPrice = (this.foundation.length !== 0) ? this.foundation.map((x => imported.inventory[x['ingredient']]['price'] * x['amount'])).reduce((x, xs) => x + xs) : 0;
+        let proteinPrice = (this.protein.length !== 0) ? this.protein.map((x => imported.inventory[x['ingredient']]['price'] * x['amount'])).reduce((x, xs) => x + xs) : 0;
+        let extrasPrice = (this.extra.length !== 0) ? this.extra.map((x => imported.inventory[x['ingredient']]['price'] * x['amount'])).reduce((x, xs) => x + xs) : 0;
+        let dressingPrice = (this.dressing.length !== 0) ? this.dressing.map((x => imported.inventory[x['ingredient']]['price'] * x['amount'])).reduce((x, xs) => x + xs) : 0;
 
         return foundationPrice + proteinPrice + extrasPrice + dressingPrice;
     }
@@ -98,50 +95,44 @@ class ExtraGreenSalad extends Salad {
         super();
     }
 
-    price(){
-        let foundationPrice = 1.3 * this.foundation.map((x => imported.inventory[x]['price'])).reduce((x, xs) => x + xs);
-        let proteinPrice = this.protein.map((x => imported.inventory[x]['price'])).reduce((x, xs) => x + xs);
-        let extrasPrice = 0.5 * this.extra.map((x => imported.inventory[x]['price'])).reduce((x, xs) => x + xs);
-        let dressingPrice = this.dressing.map((x => imported.inventory[x]['price'])).reduce((x, xs) => x + xs);
-        return foundationPrice + proteinPrice + extrasPrice + dressingPrice;
+    addSelection(selection){
+        if(imported.inventory[selection].foundation){
+            super.addSelection(selection, 1.3);
+        } else if(imported.inventory[selection].extra){ 
+            super.addSelection(selection, 0.5);
+        } else {
+            super.addSelection(selection);
+        }
+
     }
+
 }
 
 class GourmetSalad extends Salad {
     constructor(){
         super();
     }
-
-    price(foundationMul = 1.0, proteinMul = 1.0, extraMul = 1.0, dressingMul = 1.0){
-        let foundationPrice = foundationMul * this.foundation.map((x => imported.inventory[x]['price'])).reduce((x, xs) => x + xs);
-        let proteinPrice = proteinMul * this.protein.map((x => imported.inventory[x]['price'])).reduce((x, xs) => x + xs);
-        let extrasPrice = extraMul * this.extra.map((x => imported.inventory[x]['price'])).reduce((x, xs) => x + xs);
-        let dressingPrice = dressingMul * this.dressing.map((x => imported.inventory[x]['price'])).reduce((x, xs) => x + xs);
-        return foundationPrice + proteinPrice + extrasPrice + dressingPrice;
-    }
 }
 
 // console.log(imported.inventory['Sallad']['foundation'])
 
 let myCesarSalad = new Salad();
-console.log(myCesarSalad);
-myCesarSalad.addSelection("Salad + Quinoa", 3); // 10
+myCesarSalad.addSelection("Salad + Quinoa"); // 10
 myCesarSalad.addSelection('Kycklingfilé'); // 10
 myCesarSalad.addSelection('Tomat'); // 5
-myCesarSalad.addSelection('Parmesan'); // 5
 myCesarSalad.addSelection('Parmesan'); // 5
 myCesarSalad.addSelection('Ceasardressing'); // 5
 myCesarSalad.addSelection('Bacon');
 console.log(myCesarSalad);
-myCesarSalad.removeSelection('Kycklingfilé');
-console.log('---');
-console.log(myCesarSalad);
 console.log(myCesarSalad.price());
 
-// let mySalad = new ExtraGreenSalad();
-// mySalad.addSelection("Salad + Quinoa"); // 10
-// mySalad.addSelection('Kycklingfilé'); // 10
-// mySalad.addSelection('Tomat'); // 5
-// mySalad.addSelection('Parmesan'); // 5
-// mySalad.addSelection('Ceasardressing'); // 5
-// console.log(mySalad.price());
+console.log('---');
+
+let mySalad = new ExtraGreenSalad();
+mySalad.addSelection("Salad + Quinoa"); // 10
+mySalad.addSelection('Kycklingfilé'); // 10
+mySalad.addSelection('Tomat'); // 5
+mySalad.addSelection('Parmesan'); // 5
+mySalad.addSelection('Ceasardressing'); // 5
+console.log(mySalad);
+console.log(mySalad.price());
