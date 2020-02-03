@@ -16,13 +16,11 @@ class ComposeSalad extends Component {
         
         if (target.type === 'checkbox'){
             let toUpdate = this.state[name];
-            console.log(toUpdate);
             if(value === true){
                 toUpdate.push(target.id);
             } else {
                 toUpdate.pop(target.id);
             }
-            console.log(toUpdate);
             this.setState({
                 [name] : toUpdate
             });
@@ -36,7 +34,7 @@ class ComposeSalad extends Component {
     }
 
     handleSubmit(event) {
-
+        event.preventDefault();
     }
 
     render() {
