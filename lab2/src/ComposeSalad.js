@@ -10,7 +10,29 @@ class ComposeSalad extends Component {
     }
 
     handleChange(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+        
+        if (target.type === 'checkbox'){
+            let toUpdate = this.state[name];
+            console.log(toUpdate);
+            if(value === true){
+                toUpdate.push(target.id);
+            } else {
+                toUpdate.pop(target.id);
+            }
+            console.log(toUpdate);
+            this.setState({
+                [name] : toUpdate
+            });
+        } else {
+            this.setState({
+                [name] : value
+            });
+        }
 
+        console.log(this.state);
     }
 
     handleSubmit(event) {
@@ -28,7 +50,7 @@ class ComposeSalad extends Component {
                 <form onSubmit={this.handleSubmit}>
                     <label>
                         Choose foundation:
-                        <select onChange={this.handleChange}>
+                        <select name='foundation' value={this.state.foundation} onChange={this.handleChange}>
                             {foundations.map(name => <option value={name}>{name}</option>)}
                         </select>
                     </label>
@@ -38,7 +60,7 @@ class ComposeSalad extends Component {
                             Choose protein:
                             {proteins.map(name =>
                                 <div>
-                                    <input type="checkbox" id={name}></input>
+                                    <input type="checkbox" id={name} name='proteins' onChange={this.handleChange}></input>
                                     <label>{name}</label>
                                 </div>
                             )}
@@ -50,7 +72,7 @@ class ComposeSalad extends Component {
                             Choose extras:
                             {extras.map(name =>
                                 <div>
-                                    <input type="checkbox" id={name}></input>
+                                    <input type="checkbox" id={name} name='extras' onChange={this.handleChange}></input>
                                     <label>{name}</label>
                                 </div>
                             )}
@@ -59,12 +81,10 @@ class ComposeSalad extends Component {
 
                     <label>
                         Choose dressing:
-                        <select onChange={this.handleChange}>
+                        <select name='dressing' value={this.state.dressing} onChange={this.handleChange}>
                             {dressings.map(name => <option value={name}>{name}</option>)}
                         </select>
                     </label>
-
-
 
                     <input type="submit" value="Submit" />
                 </form>
