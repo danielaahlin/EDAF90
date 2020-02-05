@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+var Salad = require('./Salad')
 
 class ComposeSalad extends Component {
     constructor(props) {
@@ -35,6 +36,16 @@ class ComposeSalad extends Component {
 
     handleSubmit(event) {
         event.preventDefault();
+        let salad = new Salad();
+
+        salad.addSelection(this.state.foundation);
+        this.state.proteins.map(x => salad.addSelection(x));
+        this.state.extras.map(x => salad.addSelection(x))
+        salad.addSelection(this.state.dressing);
+
+        this.setState({
+            foundation : '', proteins : [], extras : [], dressing : '' 
+        });
     }
 
     render() {
@@ -49,6 +60,7 @@ class ComposeSalad extends Component {
                     <label>
                         Choose foundation:
                         <select name='foundation' value={this.state.foundation} onChange={this.handleChange}>
+                            <option value=''></option>
                             {foundations.map(name => <option value={name}>{name}</option>)}
                         </select>
                     </label>
@@ -80,6 +92,7 @@ class ComposeSalad extends Component {
                     <label>
                         Choose dressing:
                         <select name='dressing' value={this.state.dressing} onChange={this.handleChange}>
+                            <option value=''></option>
                             {dressings.map(name => <option value={name}>{name}</option>)}
                         </select>
                     </label>

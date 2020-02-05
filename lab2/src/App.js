@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 
 import inventory from './inventory.ES6';
-import ComposeSalad from './ComposeSalad';
 import ComposeSaladModal from './ComposeSaladModal';
 
 class App extends Component {
