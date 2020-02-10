@@ -7,16 +7,17 @@ class ViewOrder extends Component {
 
     printSalad(salad){
         let resultString = '';
-        if (salad.foundation){
+        console.log(salad);
+        if (salad.foundation.length !== 0){
             resultString += salad.foundation[0].ingredient;
         }
-        if (salad.protein){
+        if (salad.protein.length !== 0){
             resultString += salad.protein.map(ing => ing.ingredient).reduce((x, xs) => x + ', ' + xs, '');
         }
-        if (salad.extra){
+        if (salad.extra.length !== 0){
             resultString += salad.extra.map(ing => ing.ingredient).reduce((x, xs) => x + ', ' + xs, '');
         }
-        if (salad.dressing){
+        if (salad.dressing.length !== 0){
             resultString += ', ';
             resultString += salad.dressing[0].ingredient;
         }
@@ -26,10 +27,29 @@ class ViewOrder extends Component {
 
     render(){
         const orders = this.props.orders;
-        let counter = 0;
+        console.log(orders);
         return(
             <div>
-                <table>
+                <div>
+                    <h3>Din beställning</h3>
+                </div>
+                <ul className='list-group'>
+                    {orders.map(order => 
+                        <li className="list-group-item d-flex justify-content-between align-items-center" key={order.id}>
+                            #{order.id} {this.printSalad(order.salad)}
+                            <span className="badge badge-primary badge-pill">{order.price} kr</span>
+                        </li>
+                    )}
+                </ul>
+            </div>
+        );
+    }
+}
+
+export default ViewOrder;
+
+/* 
+<table>
                     <thead>
                         <tr>
                             <th>Din beställning</th>
@@ -51,10 +71,4 @@ class ViewOrder extends Component {
                         )}
                     </tbody>
                 </table>
-            </div>
-
-        );
-    }
-}
-
-export default ViewOrder;
+*/

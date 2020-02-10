@@ -14,8 +14,6 @@ class App extends Component {
     }
 
     updateOrder(toAdd){
-        console.log('hej');
-        console.log(toAdd);
         let tmpList = this.state.orders;
         tmpList.push(toAdd);
         
