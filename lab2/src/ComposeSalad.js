@@ -5,6 +5,7 @@ class ComposeSalad extends Component {
     constructor(props) {
         super(props);
         this.state = {foundation : '', proteins : [], extras : [], dressing : ''};
+        this.counter = 1;
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -30,8 +31,6 @@ class ComposeSalad extends Component {
                 [name] : value
             });
         }
-
-        console.log(this.state);
     }
 
     handleSubmit(event) {
@@ -50,7 +49,7 @@ class ComposeSalad extends Component {
         this.state.proteins.map(x => document.getElementById(x).checked = false);
         this.state.extras.map(x => document.getElementById(x).checked = false);
 
-        this.props.func(salad);
+        this.props.func({salad : salad, id : this.counter++, price : salad.price()});
     }
 
     render() {
@@ -66,7 +65,7 @@ class ComposeSalad extends Component {
                         Choose foundation:
                         <select name='foundation' value={this.state.foundation} onChange={this.handleChange}>
                             <option value=''></option>
-                            {foundations.map(name => <option value={name}>{name} +{inventory[name].price}kr</option>)}
+                            {foundations.map(name => <option value={name} key={name}>{name} +{inventory[name].price}kr</option>)}
                         </select>
                     </label>
 
@@ -74,7 +73,7 @@ class ComposeSalad extends Component {
                         <label>
                             Choose protein:
                             {proteins.map(name =>
-                                <div>
+                                <div key={name}>
                                     <input type="checkbox" id={name} name='proteins' onChange={this.handleChange}></input>
                                     <label>{name} +{inventory[name].price}kr </label>
                                 </div>
@@ -86,7 +85,7 @@ class ComposeSalad extends Component {
                         <label>
                             Choose extras:
                             {extras.map(name =>
-                                <div>
+                                <div key={name}>
                                     <input type="checkbox" id={name} name='extras' onChange={this.handleChange}></input>
                                     <label>{name} +{inventory[name].price}kr</label>
                                 </div>
@@ -98,7 +97,7 @@ class ComposeSalad extends Component {
                         Choose dressing:
                         <select name='dressing' value={this.state.dressing} onChange={this.handleChange}>
                             <option value=''></option>
-                            {dressings.map(name => <option value={name}>{name} +{inventory[name].price}kr</option>)}
+                            {dressings.map(name => <option value={name} key={name}>{name} +{inventory[name].price}kr</option>)}
                         </select>
                     </label>
 
