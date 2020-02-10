@@ -37,7 +37,7 @@ class ComposeSaladModal extends React.Component {
                                 </button>
                             </div>
                             <div className="modal-body">
-                                <ComposeSalad inventory={this.props.inventory} />
+                                <ComposeSalad inventory={this.props.inventory} func={this.props.func}/>
                             </div>
                             <div className="modal-footer">
                                 <button

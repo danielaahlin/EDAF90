@@ -46,6 +46,11 @@ class ComposeSalad extends Component {
         this.setState({
             foundation : '', proteins : [], extras : [], dressing : '' 
         });
+
+        this.state.proteins.map(x => document.getElementById(x).checked = false);
+        this.state.extras.map(x => document.getElementById(x).checked = false);
+
+        this.props.func(salad);
     }
 
     render() {
@@ -61,7 +66,7 @@ class ComposeSalad extends Component {
                         Choose foundation:
                         <select name='foundation' value={this.state.foundation} onChange={this.handleChange}>
                             <option value=''></option>
-                            {foundations.map(name => <option value={name}>{name}</option>)}
+                            {foundations.map(name => <option value={name}>{name} +{inventory[name].price}kr</option>)}
                         </select>
                     </label>
 
@@ -71,7 +76,7 @@ class ComposeSalad extends Component {
                             {proteins.map(name =>
                                 <div>
                                     <input type="checkbox" id={name} name='proteins' onChange={this.handleChange}></input>
-                                    <label>{name}</label>
+                                    <label>{name} +{inventory[name].price}kr </label>
                                 </div>
                             )}
                         </label>
@@ -83,7 +88,7 @@ class ComposeSalad extends Component {
                             {extras.map(name =>
                                 <div>
                                     <input type="checkbox" id={name} name='extras' onChange={this.handleChange}></input>
-                                    <label>{name}</label>
+                                    <label>{name} +{inventory[name].price}kr</label>
                                 </div>
                             )}
                         </label>
@@ -93,7 +98,7 @@ class ComposeSalad extends Component {
                         Choose dressing:
                         <select name='dressing' value={this.state.dressing} onChange={this.handleChange}>
                             <option value=''></option>
-                            {dressings.map(name => <option value={name}>{name}</option>)}
+                            {dressings.map(name => <option value={name}>{name} +{inventory[name].price}kr</option>)}
                         </select>
                     </label>
 

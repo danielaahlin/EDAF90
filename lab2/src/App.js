@@ -3,8 +3,24 @@ import './App.css';
 
 import inventory from './inventory.ES6';
 import ComposeSaladModal from './ComposeSaladModal';
+import ViewOrder from './ViewOrder';
 
 class App extends Component {
+    constructor(props){
+        super(props);
+        this.state = {orders : []}
+
+        this.updateOrder = this.updateOrder.bind(this);
+    }
+
+    updateOrder(toAdd){
+        console.log('hej');
+        console.log(toAdd);
+        this.setState({
+            orders : toAdd
+        })
+    }
+
     render() {
         return (
             <div>
@@ -13,10 +29,11 @@ class App extends Component {
                     <p>Here you can order custom made salads!</p>
                 </div>
                 <div>
-                    <ComposeSaladModal inventory={inventory} />
+                    <ComposeSaladModal inventory={inventory} func={this.updateOrder}/>
                 </div>
-                
-
+                <div>
+                    <ViewOrder orders={this.state.orders}/>
+                </div>
             </div>
         );
     }
