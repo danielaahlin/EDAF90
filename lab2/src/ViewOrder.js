@@ -7,7 +7,6 @@ class ViewOrder extends Component {
 
     printSalad(salad){
         let resultString = '';
-        console.log(salad);
         if (salad.foundation.length !== 0){
             resultString += salad.foundation[0].ingredient;
         }
@@ -27,7 +26,6 @@ class ViewOrder extends Component {
 
     render(){
         const orders = this.props.orders;
-        console.log(orders);
         return(
             <div>
                 <div>

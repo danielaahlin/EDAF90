@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+
 import './App.css';
 
 import inventory from './inventory.ES6';
 import ComposeSaladModal from './ComposeSaladModal';
 import ViewOrder from './ViewOrder';
+import ComposeSalad from './ComposeSalad';
 
 class App extends Component {
     constructor(props){
@@ -23,18 +26,33 @@ class App extends Component {
     }
 
     render() {
+        const composeSaladElem = (params) => <ComposeSalad {...params} inventory={inventory} func={this.updateOrder} />;
+        const viewOrderElem = (params) => <ViewOrder {...params} orders={this.state.orders}/>;
         return (
             <div>
-                <div className="jumbotron text-center">
+                <div className='jumbotron text-center'>
                     <h1>My Own Salad Bar</h1>
                     <p>Here you can order custom made salads!</p>
                 </div>
+
                 <div>
-                    <ComposeSaladModal inventory={inventory} func={this.updateOrder}/>
+                    <Router>
+                        <ul className='nav nav-pills'>
+                            <li className='nav-item'>
+                                <Link className='nav-link' to='compose-salad'>Komponera din egen sallad</Link>
+                            </li>
+                            <li className='nav-item'>
+                                <Link className='nav-link' to='view-order'>Din beställning</Link>
+                            </li>
+                        </ul>
+
+                        <Route path='/compose-salad' render={composeSaladElem}></Route>
+                        <Route path='/view-order' render={viewOrderElem}></Route>
+
+                    </Router>
                 </div>
-                <div>
-                    <ViewOrder orders={this.state.orders}/>
-                </div>
+
+                
             </div>
         );
     }

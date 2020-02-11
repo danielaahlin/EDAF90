@@ -12,6 +12,8 @@ class ComposeSalad extends Component {
     }
 
     handleChange(event) {
+        event.target.parentElement.classList.add("was-validated");
+
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
@@ -35,6 +37,13 @@ class ComposeSalad extends Component {
 
     handleSubmit(event) {
         event.preventDefault();
+        event.target.classList.add("was-validated");
+
+        if(event.target.checkValidity() === false){
+            alert('Please make sure that your order contains foundation and dressing.');
+            return;
+        }
+
         let salad = new Salad();
 
         salad.addSelection(this.state.foundation);
@@ -50,6 +59,8 @@ class ComposeSalad extends Component {
         this.state.extras.map(x => document.getElementById(x).checked = false);
 
         this.props.func({salad : salad, id : this.counter++, price : salad.price()});
+
+        this.props.history.push('/view-order');
     }
 
     render() {
@@ -60,13 +71,14 @@ class ComposeSalad extends Component {
         let dressings = Object.keys(inventory).filter(name => inventory[name].dressing);
         return (
             <div className="container">
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={this.handleSubmit} noValidate>
                     <label>
                         Choose foundation:
-                        <select name='foundation' value={this.state.foundation} onChange={this.handleChange}>
+                        <select required name='foundation' value={this.state.foundation} onChange={this.handleChange}>
                             <option value=''></option>
                             {foundations.map(name => <option value={name} key={name}>{name} +{inventory[name].price}kr</option>)}
                         </select>
+                        <div className='invalid-feedback'>Required, select one</div>
                     </label>
 
                     <div>
@@ -95,10 +107,11 @@ class ComposeSalad extends Component {
 
                     <label>
                         Choose dressing:
-                        <select name='dressing' value={this.state.dressing} onChange={this.handleChange}>
+                        <select required name='dressing' value={this.state.dressing} onChange={this.handleChange}>
                             <option value=''></option>
                             {dressings.map(name => <option value={name} key={name}>{name} +{inventory[name].price}kr</option>)}
                         </select>
+                        <div className='invalid-feedback'>Required, select one</div>
                     </label>
 
                     <input type="submit" value="Submit" />
