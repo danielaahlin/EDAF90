@@ -3,15 +3,13 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 import './App.css';
 
-import inventory from './inventory.ES6';
-import ComposeSaladModal from './ComposeSaladModal';
 import ViewOrder from './ViewOrder';
 import ComposeSalad from './ComposeSalad';
 
 class App extends Component {
     constructor(props){
         super(props);
-        this.state = {orders : []}
+        this.state = {orders : [], inventory : {}}
 
         this.updateOrder = this.updateOrder.bind(this);
     }
@@ -26,7 +24,7 @@ class App extends Component {
     }
 
     render() {
-        const composeSaladElem = (params) => <ComposeSalad {...params} inventory={inventory} func={this.updateOrder} />;
+        const composeSaladElem = (params) => <ComposeSalad {...params} inventory={this.state.inventory} func={this.updateOrder} />;
         const viewOrderElem = (params) => <ViewOrder {...params} orders={this.state.orders}/>;
         return (
             <div>
