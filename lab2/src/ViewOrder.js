@@ -37,7 +37,7 @@ class ViewOrder extends Component {
                     )}
                 </ul>
                 <div>
-                    <button type="button" class="btn btn-primary">Place order</button>
+                    <button type="button" className="btn btn-primary">Place order</button>
                 </div>
             </div>
         );

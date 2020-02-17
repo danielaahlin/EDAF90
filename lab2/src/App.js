@@ -22,6 +22,8 @@ class App extends Component {
     updateOrder(toAdd){
         let tmpList = this.state.orders;
         tmpList.push(toAdd);
+        console.log('hejk');
+        this.postSalad(toAdd);
         
         this.setState({
             orders : tmpList
@@ -61,6 +63,18 @@ class App extends Component {
             }).catch((error) => {
                 console.error("There's been an error with the fetch.")
             });
+    }
+
+    postSalad(salad){
+        console.log('called');
+        fetch('http://localhost:8080/orders/', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(salad),
+        });
     }
 
     render() {

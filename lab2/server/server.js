@@ -1,50 +1,67 @@
-const errs = require('restify-errors');
-const restify = require('restify');
+const express = require('express');
+const cors = require('cors');
+var HttpStatus = require('http-status-codes');
 
+(function () {
+  const port = 8080;
+  const server = express();
 
-function getDetails(req, res, next, kind) {
-  const obj = inventory[req.params.name];
-  if(obj) {
-    if(obj[kind]) {
-      res.send(obj);
+  const corsOptions = {
+    origin: '*',
+    optionsSuccessStatus: 200
+  };
+
+  server.use(cors(corsOptions));
+  server.use(express.json());
+
+  server.listen(port, () => {
+    console.log('salad bar REST Server is listening on port ' + port);
+  });
+
+  function getDetails(req, res, next, kind) {
+    const obj = inventory[req.params.name];
+    if(obj) {
+      if(obj[kind]) {
+        res.json(obj);
+      } else {
+        res.set('Content-Type', 'text/plain');
+        res.status(HttpStatus.BAD_REQUEST).send(req.params.name + ' is not a ' + kind);
+      }
     } else {
-      res.send(new errs.BadRequestError(req.params.name + ' is not a ' + kind));
+      res.set('Content-Type', 'text/plain');
+      res.status(HttpStatus.NOT_FOUND).send('can not find ' + req.params.name);
     }
-  } else {
-    res.send(new errs.NotFoundError('can not find ' + req.params.name));
   }
-  next();
-}
 
-function getList(req, res, next, kind) {
-  let list = Object.keys(inventory).filter(name => inventory[name][kind]);
-  res.send(list);
-  next();
-}
-
-function addInventoryListener(server, kind) {
-  server.get('/' + kind + 's', (req, res, next) => getList(req, res, next, kind));
-  server.get('/' + kind + 's/', (req, res, next) => getList(req, res, next, kind));
-  server.get('/' + kind + 's/:name', (req, res, next) => getDetails(req, res, next, kind));
-}
-
-const server = restify.createServer({name: 'my salad bar REST server',});
-server.use(
-  function crossOrigin(req,res,next){
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    return next();
+  function handleOrder(req, res, next) {
+    console.log(res.body)
+    const order = {
+      status: 'confirmed',
+      timestamp: new Date(),
+      order: req.body
+    };
+    res.json(order);
   }
-);
-addInventoryListener(server, 'foundation');
-addInventoryListener(server, 'protein');
-addInventoryListener(server, 'extra');
-addInventoryListener(server, 'dressing');
-server.post('/orders/', (req, res, next) => res.send('thank you for the order'));
 
-server.listen(8080, function() {
-  console.log('%s listening at %s', server.name, server.url);
-});
+  function getList(req, res, next, kind) {
+    let list = Object.keys(inventory).filter(name => inventory[name][kind]);
+    res.json(list);
+  }
+
+  function addInventoryListener(server, kind) {
+    server.get('/' + kind + 's', (req, res, next) => getList(req, res, next, kind));
+    server.get('/' + kind + 's/', (req, res, next) => getList(req, res, next, kind));
+    server.get('/' + kind + 's/:name', (req, res, next) => getDetails(req, res, next, kind));
+  }
+
+  addInventoryListener(server, 'foundation');
+  addInventoryListener(server, 'protein');
+  addInventoryListener(server, 'extra');
+  addInventoryListener(server, 'dressing');
+  server.post('/orders/', handleOrder);
+  server.get("/", (req, res, next) =>
+    res.json({try: req.hostname + ":" + port + req.originalUrl + "foundations"})
+  );
 
 const inventory = {
     Sallad: {price: 10, foundation: true, vegan: true}, 
@@ -97,3 +114,4 @@ const inventory = {
     'Soyavinägrett': {price: 5, dressing: true, vegan: true},
     'Örtvinägrett': {price: 5, dressing: true, vegan: true},
 };
+}) ();
