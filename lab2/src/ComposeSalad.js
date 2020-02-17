@@ -40,7 +40,7 @@ class ComposeSalad extends Component {
         event.target.classList.add("was-validated");
 
         if(event.target.checkValidity() === false){
-            alert('Please make sure that your order contains foundation and dressing.');
+            // alert('Please make sure that your order contains foundation and dressing.');
             return;
         }
 
@@ -74,7 +74,7 @@ class ComposeSalad extends Component {
                 <form onSubmit={this.handleSubmit} noValidate>
                     <label>
                         Choose foundation:
-                        <select required name='foundation' value={this.state.foundation} onChange={this.handleChange}>
+                        <select required className="form-control" name='foundation' value={this.state.foundation} onChange={this.handleChange}>
                             <option value=''></option>
                             {foundations.map(name => <option value={name} key={name}>{name} +{inventory[name].price}kr</option>)}
                         </select>
@@ -86,7 +86,7 @@ class ComposeSalad extends Component {
                             Choose protein:
                             {proteins.map(name =>
                                 <div key={name}>
-                                    <input type="checkbox" id={name} name='proteins' onChange={this.handleChange}></input>
+                                    <input type="checkbox" className="form-check-input" id={name} name='proteins' onChange={this.handleChange}></input>
                                     <label>{name} +{inventory[name].price}kr </label>
                                 </div>
                             )}
@@ -98,7 +98,7 @@ class ComposeSalad extends Component {
                             Choose extras:
                             {extras.map(name =>
                                 <div key={name}>
-                                    <input type="checkbox" id={name} name='extras' onChange={this.handleChange}></input>
+                                    <input type="checkbox" className="form-check-input" id={name} name='extras' onChange={this.handleChange}></input>
                                     <label>{name} +{inventory[name].price}kr</label>
                                 </div>
                             )}
@@ -107,7 +107,7 @@ class ComposeSalad extends Component {
 
                     <label>
                         Choose dressing:
-                        <select required name='dressing' value={this.state.dressing} onChange={this.handleChange}>
+                        <select required className="form-control" name='dressing' value={this.state.dressing} onChange={this.handleChange}>
                             <option value=''></option>
                             {dressings.map(name => <option value={name} key={name}>{name} +{inventory[name].price}kr</option>)}
                         </select>
