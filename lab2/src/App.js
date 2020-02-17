@@ -3,17 +3,20 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 import './App.css';
 
-import inventory from './inventory.ES6';
-import ComposeSaladModal from './ComposeSaladModal';
 import ViewOrder from './ViewOrder';
 import ComposeSalad from './ComposeSalad';
 
 class App extends Component {
     constructor(props){
         super(props);
-        this.state = {orders : []}
+        this.state = {orders : [], inventory : {}}
 
         this.updateOrder = this.updateOrder.bind(this);
+
+        this.fetchFromServer('foundations');
+        this.fetchFromServer('proteins');
+        this.fetchFromServer('extras');
+        this.fetchFromServer('dressings');
     }
 
     updateOrder(toAdd){
@@ -25,9 +28,45 @@ class App extends Component {
         })
     }
 
+    fetchFromServer(url){
+        let path = 'http://localhost:8080/' + url + '/';
+        fetch(path)
+            .then((response) => {
+                if(!response.ok){
+                    throw new Error('WHEP');
+                }
+                return response.json();
+            }).then((myJson) => {
+                myJson.map((x) => {
+                    fetch(path.concat(x))
+                    .then((response) => {
+                        if(!response.ok){
+                            throw new Error('WHEP');
+                        }
+                        return response.json();
+                    }).then((myJson) => {
+                        // this.state.inventory[x] = myJson;
+                        // this.setState();
+                        this.setState({
+                            inventory: {
+                                ...this.state.inventory,
+                                [x] : myJson
+                            }
+                        });
+                    }).catch((error) => {
+                        console.error('ops');
+                    });
+                });
+                return myJson;
+            }).catch((error) => {
+                console.error("There's been an error with the fetch.")
+            });
+    }
+
     render() {
-        const composeSaladElem = (params) => <ComposeSalad {...params} inventory={inventory} func={this.updateOrder} />;
+        const composeSaladElem = (params) => <ComposeSalad {...params} inventory={this.state.inventory} func={this.updateOrder} />;
         const viewOrderElem = (params) => <ViewOrder {...params} orders={this.state.orders}/>;
+        
         return (
             <div>
                 <div className='jumbotron text-center'>

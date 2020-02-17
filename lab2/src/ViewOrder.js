@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 
 class ViewOrder extends Component {
-    constructor(props){
-        super(props);
-    }
 
     printSalad(salad){
         let resultString = '';
@@ -39,6 +36,9 @@ class ViewOrder extends Component {
                         </li>
                     )}
                 </ul>
+                <div>
+                    <button type="button" class="btn btn-primary">Place order</button>
+                </div>
             </div>
         );
     }
